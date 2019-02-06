@@ -59,6 +59,25 @@ More information is only accessible by people who are already enrolled in Term 2
 of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
 for instructions and the project rubric.
 
+## Reflections
+
+* Effects of the PID components:
+
+Each of the PID components had the following effects on my implementation:
+The P component was responsible for setting the steer angle of the car based on the distance of the car from the lane center, or the cross-track error (CTE). If the CTE is more, this component causes the steering angle to increase so that the car steers quickly towards the lane center. On the other hand, if the CTE is less, the car is not too far from the lane center. Hence, this component is small so that the car steers at a small angle towards the lane center.
+
+The D component is responsible for steering the car as closely along the lane center as possible. In the absence of this component, the P component causes the car to overshoot the lane center everytime causing the car to oscillate around the lane center. This component prevents the car from overshooting too much and helps in aligning the trajectory of the car closely with the lane center.
+
+The I component is used to overcome the effects of biases like a steering drift in the car. For this project, there was very little bias in the car which is why the final value of this component is very close to zero.
+
+The effects of these components were exactly as I had expected.
+
+* How the final hyperparameters were chosen:
+
+The values used in the exercises for the PID hyperparameters turned out to be a good starting point, as the car did not leave the road so often even with these values. After initializing the hyperparameters in this way, I used a modified version of twiddle to tune my hyperparameters, where the starting points for the hyperparameter settings could differ. The starting point was simply the current position of the car when the hyperparameters were set to that particular setting. For each hyperparameter setting, the car was first allowed to drive for 100 steps and then the average cte was calculated for subsequent 100 steps. The idea was that although the starting points are different, since the average cte is only calculated after driving 100 steps, the car should have adjusted to the new hyperparameter setting by then and the different starting points would not make much of a difference. The final hyperparameter setting was [0.223, 0.005, 4.35] for the P, I, D components respectively.
+
+Another thing I observed was that even after finetuning the hyperparameters, the car tended to drive very unsteadily and deviate a lot when the cte was too high, which generally happened when the car was turning on a curve. This is because the speed was too high for the car to be able to respond in time and turn on the curve. As a result, I also adjusted the throttle based on the cte. If the cte was too high, the throttle had a high negative value to reduce the speed of the car rapidly and viceversa.
+
 ## Hints!
 
 * You don't have to follow this directory structure, but if you do, your work
